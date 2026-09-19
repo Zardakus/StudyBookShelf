@@ -64,6 +64,6 @@ Abaixo está o detalhamento do Product Requirements Document (PRD) quebrado em I
 ### Issue #7: Sistema de Favoritos e Seguidores (A Fazer)
 **Descrição:** Permitir que desenvolvedores construam curadorias favoritando tópicos de outros e seguindo perfis.
 **Critérios de Aceite:**
-- [ ] Botão de favoritar em tópicos públicos do Feed da Comunidade.
-- [ ] Página de perfil público do usuário com botão "Seguir".
-- [ ] Filtro no Feed da Comunidade para ver apenas tópicos de "Quem eu sigo".
+- [x] Botão de favoritar em tópicos públicos do Feed da Comunidade.
+- [x] Página de perfil público do usuário com botão "Seguir" (implementado botão seguir direto no card).
+- [x] Filtro no Feed da Comunidade para ver apenas tópicos de "Quem eu sigo".

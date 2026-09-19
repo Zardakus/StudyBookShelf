@@ -16,7 +16,28 @@ export async function GET(req: Request) {
     if (scope === "community") {
       const topics = await prisma.topic.findMany({
         where: { visibility: "PUBLIC" },
-        include: { user: { select: { name: true, image: true, id: true } } },
+        include: { 
+          user: { select: { name: true, image: true, id: true } },
+          favoritedBy: { where: { userId: session.user.id } }
+        },
+        orderBy: { createdAt: "desc" },
+      });
+      return NextResponse.json(topics);
+    }
+
+    if (scope === "following") {
+      const following = await prisma.follow.findMany({
+        where: { followerId: session.user.id },
+        select: { followingId: true },
+      });
+      const followingIds = following.map((f) => f.followingId);
+
+      const topics = await prisma.topic.findMany({
+        where: { visibility: "PUBLIC", userId: { in: followingIds } },
+        include: { 
+          user: { select: { name: true, image: true, id: true } },
+          favoritedBy: { where: { userId: session.user.id } }
+        },
         orderBy: { createdAt: "desc" },
       });
       return NextResponse.json(topics);
@@ -25,7 +46,14 @@ export async function GET(req: Request) {
     if (scope === "favorites") {
       const favorites = await prisma.favorite.findMany({
         where: { userId: session.user.id },
-        include: { topic: { include: { user: { select: { name: true, image: true, id: true } } } } },
+        include: { 
+          topic: { 
+            include: { 
+              user: { select: { name: true, image: true, id: true } },
+              favoritedBy: { where: { userId: session.user.id } }
+            } 
+          } 
+        },
         orderBy: { createdAt: "desc" },
       });
       return NextResponse.json(favorites.map(f => f.topic));
