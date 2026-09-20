@@ -47,6 +47,7 @@ export default function TopicBoard() {
   const [recDomain, setRecDomain] = useState<string | null>(null);
   const [recsLoading, setRecsLoading] = useState(false);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const [selectedRec, setSelectedRec] = useState<Recommendation | null>(null);
 
   const fetchTopics = async () => {
     try {
@@ -123,6 +124,7 @@ export default function TopicBoard() {
     setRecDomain(domain);
     setRecsLoading(true);
     setRecommendations([]);
+    setSelectedRec(null);
 
     try {
       const res = await fetch("/api/ai/recommend", {
@@ -132,7 +134,11 @@ export default function TopicBoard() {
       });
       if (res.ok) {
         const data = await res.json();
-        setRecommendations(data.recommendations || []);
+        const recs = data.recommendations || [];
+        setRecommendations(recs);
+        if (recs.length > 0) {
+          setSelectedRec(recs[0]);
+        }
       }
     } finally {
       setRecsLoading(false);
@@ -141,7 +147,13 @@ export default function TopicBoard() {
 
   const handleAddRec = async (rec: Recommendation) => {
     // Optimistically remove from list
-    setRecommendations(prev => prev.filter(r => r.title !== rec.title));
+    setRecommendations(prev => {
+      const next = prev.filter(r => r.title !== rec.title);
+      if (selectedRec?.title === rec.title) {
+        setSelectedRec(next[0] || null);
+      }
+      return next;
+    });
 
     const newTopic = {
       title: rec.title,
@@ -160,7 +172,13 @@ export default function TopicBoard() {
 
   const handleIgnoreRec = async (title: string) => {
     // Optimistically remove from list
-    setRecommendations(prev => prev.filter(r => r.title !== title));
+    setRecommendations(prev => {
+      const next = prev.filter(r => r.title !== title);
+      if (selectedRec?.title === title) {
+        setSelectedRec(next[0] || null);
+      }
+      return next;
+    });
 
     await fetch("/api/recommendations/ignore", {
       method: "POST",
@@ -362,86 +380,94 @@ export default function TopicBoard() {
 
       {/* Recommendations Modal */}
       <Dialog open={!!recDomain} onOpenChange={(open) => !open && setRecDomain(null)}>
-        <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-xl">
-              <Wand2 className="h-5 w-5 text-amber-500" />
-              Recommendations for {recDomain}
-            </DialogTitle>
-          </DialogHeader>
-
+        <DialogContent className="max-w-4xl p-0 overflow-hidden flex flex-col sm:flex-row h-[600px] max-h-[85vh] gap-0">
           {recsLoading ? (
-            <div className="space-y-4 py-6">
-              {/* Top 3 Skeleton */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {[1, 2, 3].map(i => (
-                  <div key={i} className="h-40 bg-zinc-100 dark:bg-zinc-800 animate-pulse rounded-xl border border-amber-200/50 dark:border-amber-900/50" />
-                ))}
-              </div>
-              {/* Compact Skeleton */}
-              <div className="space-y-2 mt-6">
-                {[1, 2, 3, 4].map(i => (
-                  <div key={i} className="h-16 bg-zinc-100 dark:bg-zinc-800 animate-pulse rounded-lg" />
-                ))}
-              </div>
+            <div className="w-full h-full flex flex-col items-center justify-center p-8">
+              <Loader2 className="h-8 w-8 animate-spin text-amber-500 mb-4" />
+              <DialogTitle className="text-zinc-500 font-medium">Finding recommendations...</DialogTitle>
             </div>
           ) : recommendations.length === 0 ? (
-            <div className="text-center py-12 text-zinc-500">
-              No new recommendations found right now.
+            <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center">
+              <DialogTitle className="text-xl mb-2">Recommendations for {recDomain}</DialogTitle>
+              <p className="text-zinc-500">No new recommendations found right now.</p>
             </div>
           ) : (
-            <div className="space-y-8 py-4">
-              {/* TOP 3 - Highly Recommended */}
-              <div className="space-y-3">
-                <h3 className="text-sm font-bold text-amber-600 dark:text-amber-500 uppercase tracking-wider">Highly Recommended</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {recommendations.slice(0, 3).map((rec, i) => (
-                    <Card key={i} className="flex flex-col border-amber-200 dark:border-amber-900/50 bg-amber-50/30 dark:bg-amber-950/20 shadow-sm relative overflow-hidden group">
-                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 to-orange-400" />
-                      <CardHeader className="p-4 pb-2">
-                        <CardTitle className="text-base leading-tight">{rec.title}</CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-4 pt-0 flex-1">
-                        <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">{rec.description}</p>
-                      </CardContent>
-                      <CardFooter className="p-3 pt-0 flex gap-2">
-                        <Button size="sm" className="w-full h-8 text-xs bg-amber-600 hover:bg-amber-700 text-white" onClick={() => handleAddRec(rec)}>
-                          <PlusCircle className="w-3 h-3 mr-1" /> Add
-                        </Button>
-                        <Button variant="outline" size="icon" className="h-8 w-8 shrink-0 border-amber-200 hover:bg-amber-100 dark:border-amber-900 dark:hover:bg-amber-900" onClick={() => handleIgnoreRec(rec.title)} title="Ignore">
-                          <Trash2 className="w-3 h-3 text-zinc-500" />
-                        </Button>
-                      </CardFooter>
-                    </Card>
-                  ))}
+            <>
+              {/* Sidebar List */}
+              <div className="w-full sm:w-1/3 border-b sm:border-b-0 sm:border-r flex flex-col bg-zinc-50/50 dark:bg-zinc-950/30">
+                <DialogHeader className="p-4 border-b text-left">
+                  <DialogTitle className="flex items-center gap-2 text-lg">
+                    <Wand2 className="h-5 w-5 text-amber-500" />
+                    {recDomain}
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="flex-1 overflow-y-auto p-2 space-y-1">
+                  {recommendations.map((rec, i) => {
+                    const isSelected = selectedRec?.title === rec.title;
+                    const isHighlyRecommended = i < 3;
+                    return (
+                      <div key={i}>
+                        {!isHighlyRecommended && i === 3 && (
+                          <div className="px-2 pt-3 pb-1 text-[10px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                            Also Consider
+                          </div>
+                        )}
+                        <button 
+                          onClick={() => setSelectedRec(rec)}
+                          className={`w-full text-left p-3 rounded-lg transition-colors border relative ${
+                            isSelected 
+                              ? "bg-white dark:bg-zinc-900 border-amber-300 dark:border-amber-700/50 shadow-sm" 
+                              : "border-transparent hover:bg-zinc-100 dark:hover:bg-zinc-900"
+                          }`}
+                        >
+                          {isSelected && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-amber-500 rounded-r-md" />}
+                          {isHighlyRecommended && (
+                            <div className={`text-[10px] font-bold text-amber-600 dark:text-amber-500 mb-1 ${!isSelected ? "opacity-70" : ""}`}>
+                              RECOMMENDED
+                            </div>
+                          )}
+                          <div className="font-medium text-sm line-clamp-2">{rec.title}</div>
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Remaining 4 to 10 - Compact List */}
-              {recommendations.length > 3 && (
-                <div className="space-y-3">
-                  <h3 className="text-sm font-semibold text-zinc-500 uppercase tracking-wider">Also Consider</h3>
-                  <div className="space-y-2">
-                    {recommendations.slice(3).map((rec, i) => (
-                      <div key={i} className="flex items-start justify-between gap-4 p-3 rounded-lg border bg-zinc-50 dark:bg-zinc-900/50 hover:bg-white dark:hover:bg-zinc-900 transition-colors">
-                        <div>
-                          <h4 className="font-medium text-sm">{rec.title}</h4>
-                          <p className="text-xs text-zinc-500 mt-1">{rec.description}</p>
-                        </div>
-                        <div className="flex gap-2 shrink-0">
-                          <Button variant="secondary" size="sm" className="h-7 text-xs" onClick={() => handleAddRec(rec)}>
-                            <PlusCircle className="w-3 h-3 mr-1" /> Add
-                          </Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-zinc-400 hover:text-red-500" onClick={() => handleIgnoreRec(rec.title)} title="Ignore">
-                            <X className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
+              {/* Detail Pane */}
+              <div className="flex-1 flex flex-col bg-white dark:bg-zinc-950 overflow-y-auto">
+                {selectedRec ? (
+                  <div className="p-8 flex-1 flex flex-col justify-center max-w-xl mx-auto w-full">
+                    <div className="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-500 rounded-2xl flex items-center justify-center mb-6">
+                      <Wand2 className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-4">{selectedRec.title}</h3>
+                    <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed mb-8">
+                      {selectedRec.description}
+                    </p>
+                    <div className="flex gap-3">
+                      <Button 
+                        onClick={() => handleAddRec(selectedRec)}
+                        className="flex-1 bg-amber-600 hover:bg-amber-700 text-white gap-2"
+                      >
+                        <PlusCircle className="w-4 h-4" /> Add to Board
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        onClick={() => handleIgnoreRec(selectedRec.title)}
+                        className="px-6"
+                      >
+                        Ignore
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
+                ) : (
+                  <div className="flex-1 flex items-center justify-center text-zinc-500">
+                    Select a topic to view details
+                  </div>
+                )}
+              </div>
+            </>
           )}
         </DialogContent>
       </Dialog>
