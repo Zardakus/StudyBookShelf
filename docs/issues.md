@@ -67,3 +67,38 @@ Abaixo estÃ¡ o detalhamento do Product Requirements Document (PRD) quebrado em I
 - [x] BotÃ£o de favoritar em tÃ³picos pÃºblicos do Feed da Comunidade.
 - [x] PÃ¡gina de perfil pÃºblico do usuÃ¡rio com botÃ£o "Seguir" (implementado botÃ£o seguir direto no card).
 - [x] Filtro no Feed da Comunidade para ver apenas tÃ³picos de "Quem eu sigo".
+
+---
+
+## Epic 5: Motor de Recomendações Contextuais
+
+### Issue #8: Banco de Dados - Tabela IgnoredRecommendation
+**Descrição:** Adicionar a entidade responsável por salvar as recomendações que o usuário ignorou, funcionando como uma blacklist para o LLM.
+**Critérios de Aceite:**
+- [ ] Criar o model IgnoredRecommendation no schema.prisma com userId, domain e 	opicTitle.
+- [ ] O modelo deve ter relação com o User.
+- [ ] Rodar o comando de sincronização do banco de dados (ex: db push ou dev).
+
+### Issue #9: Rota de IA - Gerador de Recomendações
+**Descrição:** Criar o endpoint de backend que chama o Google Gemini, passando o contexto e a blacklist, para receber as sugestões estruturadas.
+**Critérios de Aceite:**
+- [ ] Criar POST /api/ai/recommend.
+- [ ] Buscar no banco os tópicos do usuário para o domínio solicitado (para contexto do que ele já sabe).
+- [ ] Buscar no banco a lista de IgnoredRecommendation daquele domínio (blacklist).
+- [ ] Instruir o LLM via Vercel AI SDK a retornar um array de 1 a 10 sugestões (título e descrição curta).
+
+### Issue #10: UI - Modal de Recomendações e Regra dos 3
+**Descrição:** Criar o gatilho visual e a interface onde as recomendações serão exibidas, respeitando a hierarquia visual.
+**Critérios de Aceite:**
+- [ ] Adicionar um botão de "varinha mágica" ao lado de cada Domínio no TopicBoard.
+- [ ] O clique deve abrir um Modal/Dialog com *Skeleton Loaders* enquanto a API responde.
+- [ ] Os 3 primeiros itens devem ter um card de destaque maior ("Highly Recommended").
+- [ ] Os demais itens (do 4º ao 10º) devem aparecer em uma lista compacta.
+- [ ] Clicar fora do modal fecha-o sem salvar estado.
+
+### Issue #11: Ações de Conversão - Add e Ignore
+**Descrição:** Ligar os botões dos cards de recomendação aos respectivos endpoints de conversão e descarte.
+**Critérios de Aceite:**
+- [ ] Clicar em "Add" deve salvar um novo tópico como TO_LEARN e PRIVATE, fechando a recomendação e atualizando a interface.
+- [ ] Clicar em "Ignore" deve chamar um novo endpoint POST /api/recommendations/ignore para salvar no banco.
+- [ ] Tópicos adicionados não devem gerar reload da página inteira.
