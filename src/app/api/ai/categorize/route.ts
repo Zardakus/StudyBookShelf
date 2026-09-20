@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     }
 
     const { object } = await generateObject({
-      model: google("gemini-1.5-flash"),
+      model: google("gemini-3.5-flash"),
       system: `You are an expert developer assistant. Your task is to categorize a user's natural language input about something they want to learn or study. 
       Extract a concise title, a brief description, and assign it to a broad technical domain (e.g., Frontend, Backend, DevOps, Data Science, Architecture, AI/ML, Mobile, etc.).`,
       prompt: `Categorize the following learning topic: "${prompt}"`,
