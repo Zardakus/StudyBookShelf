@@ -380,7 +380,7 @@ export default function TopicBoard() {
 
       {/* Recommendations Modal */}
       <Dialog open={!!recDomain} onOpenChange={(open) => !open && setRecDomain(null)}>
-        <DialogContent className="max-w-4xl p-0 overflow-hidden flex flex-col sm:flex-row h-[600px] max-h-[85vh] gap-0">
+        <DialogContent className="sm:max-w-3xl md:max-w-4xl lg:max-w-5xl w-[95vw] p-0 overflow-hidden flex flex-col sm:flex-row h-[600px] max-h-[85vh] gap-0">
           {recsLoading ? (
             <div className="w-full h-full flex flex-col items-center justify-center p-8">
               <Loader2 className="h-8 w-8 animate-spin text-amber-500 mb-4" />
