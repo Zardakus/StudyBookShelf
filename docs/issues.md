@@ -90,15 +90,15 @@ Abaixo estÃ¡ o detalhamento do Product Requirements Document (PRD) quebrado em
 ### Issue #10: UI - Modal de Recomendações e Regra dos 3
 **Descrição:** Criar o gatilho visual e a interface onde as recomendações serão exibidas, respeitando a hierarquia visual.
 **Critérios de Aceite:**
-- [ ] Adicionar um botão de "varinha mágica" ao lado de cada Domínio no TopicBoard.
-- [ ] O clique deve abrir um Modal/Dialog com *Skeleton Loaders* enquanto a API responde.
-- [ ] Os 3 primeiros itens devem ter um card de destaque maior ("Highly Recommended").
-- [ ] Os demais itens (do 4º ao 10º) devem aparecer em uma lista compacta.
-- [ ] Clicar fora do modal fecha-o sem salvar estado.
+- [x] Adicionar um botão de "varinha mágica" ao lado de cada Domínio no `TopicBoard`.
+- [x] O clique deve abrir um Modal/Dialog com *Skeleton Loaders* enquanto a API responde.
+- [x] Os 3 primeiros itens devem ter um card de destaque maior ("Highly Recommended").
+- [x] Os demais itens (do 4º ao 10º) devem aparecer em uma lista compacta.
+- [x] Clicar fora do modal fecha-o sem salvar estado.
 
 ### Issue #11: Ações de Conversão - Add e Ignore
 **Descrição:** Ligar os botões dos cards de recomendação aos respectivos endpoints de conversão e descarte.
 **Critérios de Aceite:**
-- [ ] Clicar em "Add" deve salvar um novo tópico como TO_LEARN e PRIVATE, fechando a recomendação e atualizando a interface.
-- [ ] Clicar em "Ignore" deve chamar um novo endpoint POST /api/recommendations/ignore para salvar no banco.
-- [ ] Tópicos adicionados não devem gerar reload da página inteira.
+- [x] Clicar em "Add" deve salvar um novo tópico como `TO_LEARN` e `PRIVATE`, fechando a recomendação e atualizando a interface.
+- [x] Clicar em "Ignore" deve chamar um novo endpoint `POST /api/recommendations/ignore` para salvar no banco.
+- [x] Tópicos adicionados não devem gerar reload da página inteira.
