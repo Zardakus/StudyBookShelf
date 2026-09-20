@@ -82,10 +82,10 @@ Abaixo estÃ¡ o detalhamento do Product Requirements Document (PRD) quebrado em
 ### Issue #9: Rota de IA - Gerador de Recomendações
 **Descrição:** Criar o endpoint de backend que chama o Google Gemini, passando o contexto e a blacklist, para receber as sugestões estruturadas.
 **Critérios de Aceite:**
-- [ ] Criar POST /api/ai/recommend.
-- [ ] Buscar no banco os tópicos do usuário para o domínio solicitado (para contexto do que ele já sabe).
-- [ ] Buscar no banco a lista de IgnoredRecommendation daquele domínio (blacklist).
-- [ ] Instruir o LLM via Vercel AI SDK a retornar um array de 1 a 10 sugestões (título e descrição curta).
+- [x] Criar `POST /api/ai/recommend`.
+- [x] Buscar no banco os tópicos do usuário para o domínio solicitado (para contexto do que ele já sabe).
+- [x] Buscar no banco a lista de `IgnoredRecommendation` daquele domínio (blacklist).
+- [x] Instruir o LLM via Vercel AI SDK a retornar um array de 1 a 10 sugestões (título e descrição curta).
 
 ### Issue #10: UI - Modal de Recomendações e Regra dos 3
 **Descrição:** Criar o gatilho visual e a interface onde as recomendações serão exibidas, respeitando a hierarquia visual.
