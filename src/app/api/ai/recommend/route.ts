@@ -5,6 +5,8 @@ import { generateObject } from "ai";
 import { google } from "@ai-sdk/google";
 import { z } from "zod";
 
+export const maxDuration = 60;
+
 export async function POST(req: Request) {
   try {
     const session = await auth();
@@ -67,7 +69,10 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("AI Recommendation error:", error);
     return NextResponse.json(
-      { error: "Failed to generate recommendations" },
+      { 
+        error: "Failed to generate recommendations", 
+        details: error instanceof Error ? error.message : String(error)
+      },
       { status: 500 }
     );
   }
