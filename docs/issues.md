@@ -1,104 +1,104 @@
 # Backlog de Issues - StudyBookShelf
 
-Abaixo está o detalhamento do Product Requirements Document (PRD) quebrado em Issues acionáveis para o Kanban.
+Abaixo estÃ¡ o detalhamento do Product Requirements Document (PRD) quebrado em Issues acionÃ¡veis para o Kanban.
 
 ---
 
-## Epic 1: Infraestrutura e Configuração Inicial
+## Epic 1: Infraestrutura e ConfiguraÃ§Ã£o Inicial
 
 ### Issue #1: Setup do Projeto Next.js e Banco de Dados
-**Descrição:** Inicializar o repositório utilizando Next.js (App Router), Tailwind CSS e shadcn/ui. Configurar o banco de dados relacional PostgreSQL (Neon/Supabase) integrando o Prisma ORM.
-**Critérios de Aceite:**
+**DescriÃ§Ã£o:** Inicializar o repositÃ³rio utilizando Next.js (App Router), Tailwind CSS e shadcn/ui. Configurar o banco de dados relacional PostgreSQL (Neon/Supabase) integrando o Prisma ORM.
+**CritÃ©rios de Aceite:**
 - [x] O projeto roda localmente sem erros (`npm run dev`).
 - [x] Prisma instalado e esquema inicial gerado.
-- [x] Variáveis de ambiente configuradas no `.env.example`.
+- [x] VariÃ¡veis de ambiente configuradas no `.env.example`.
 
-### Issue #2: Autenticação de Usuários
-**Descrição:** Integrar o NextAuth.js (Auth.js) para permitir login e registro utilizando a conta do GitHub.
-**Critérios de Aceite:**
+### Issue #2: AutenticaÃ§Ã£o de UsuÃ¡rios
+**DescriÃ§Ã£o:** Integrar o NextAuth.js (Auth.js) para permitir login e registro utilizando a conta do GitHub.
+**CritÃ©rios de Aceite:**
 - [x] Tabelas do NextAuth criadas no Prisma (`User`, `Account`, `Session`, etc.).
-- [x] Fluxo de login com GitHub funcionando na página inicial.
-- [x] Proteção de rotas para garantir que o dashboard seja privado.
+- [x] Fluxo de login com GitHub funcionando na pÃ¡gina inicial.
+- [x] ProteÃ§Ã£o de rotas para garantir que o dashboard seja privado.
 
 ---
 
-## Epic 2: Motor de Inteligência Artificial
+## Epic 2: Motor de InteligÃªncia Artificial
 
-### Issue #3: Integração do Google Gemini para Categorização de Tópicos
-**Descrição:** Criar uma rota de API (`/api/ai/categorize`) utilizando o Vercel AI SDK para receber um input de texto livre e retornar um objeto JSON estruturado.
-**Critérios de Aceite:**
-- [x] A rota recebe um `prompt` do usuário (ex: "Quero aprender React").
+### Issue #3: IntegraÃ§Ã£o do Google Gemini para CategorizaÃ§Ã£o de TÃ³picos
+**DescriÃ§Ã£o:** Criar uma rota de API (`/api/ai/categorize`) utilizando o Vercel AI SDK para receber um input de texto livre e retornar um objeto JSON estruturado.
+**CritÃ©rios de Aceite:**
+- [x] A rota recebe um `prompt` do usuÃ¡rio (ex: "Quero aprender React").
 - [x] A IA retorna um JSON contendo `title`, `description` e `domain`.
 - [x] Tratamento de erros caso o LLM falhe ao estruturar os dados.
 
 ---
 
-## Epic 3: Funcionalidades Core (Gestão de Conhecimento)
+## Epic 3: Funcionalidades Core (GestÃ£o de Conhecimento)
 
-### Issue #4: Interface de Criação de Tópicos
-**Descrição:** Desenvolver o componente do Frontend onde o desenvolvedor digita o que deseja aprender.
-**Critérios de Aceite:**
-- [x] Input de texto com botão de "Adicionar".
+### Issue #4: Interface de CriaÃ§Ã£o de TÃ³picos
+**DescriÃ§Ã£o:** Desenvolver o componente do Frontend onde o desenvolvedor digita o que deseja aprender.
+**CritÃ©rios de Aceite:**
+- [x] Input de texto com botÃ£o de "Adicionar".
 - [x] Feedback de carregamento (spinner) enquanto aguarda a IA processar.
-- [x] Requisição disparada salva o resultado no banco via endpoint do backend.
+- [x] RequisiÃ§Ã£o disparada salva o resultado no banco via endpoint do backend.
 
-### Issue #5: Kanban Board de Tópicos (My Board)
-**Descrição:** Criar o painel onde o usuário visualiza seus tópicos privados.
-**Critérios de Aceite:**
-- [x] Tópicos agrupados visualmente por `Domain` (ex: Frontend, Backend).
+### Issue #5: Kanban Board de TÃ³picos (My Board)
+**DescriÃ§Ã£o:** Criar o painel onde o usuÃ¡rio visualiza seus tÃ³picos privados.
+**CritÃ©rios de Aceite:**
+- [x] TÃ³picos agrupados visualmente por `Domain` (ex: Frontend, Backend).
 - [x] Organizados em colunas por `Status` (A Aprender, Estudando, Dominado).
-- [x] Usuário pode alterar o status de um tópico através de um Select/Drag-and-Drop.
-- [x] Tópicos podem ter a visibilidade alterada entre Privado/Público.
+- [x] UsuÃ¡rio pode alterar o status de um tÃ³pico atravÃ©s de um Select/Drag-and-Drop.
+- [x] TÃ³picos podem ter a visibilidade alterada entre Privado/PÃºblico.
 
 ---
 
 ## Epic 4: Aspectos Sociais e Comunidade
 
-### Issue #6: Feed da Comunidade (Público)
-**Descrição:** Exibir tópicos marcados como `PUBLIC` por todos os usuários na plataforma.
-**Critérios de Aceite:**
+### Issue #6: Feed da Comunidade (PÃºblico)
+**DescriÃ§Ã£o:** Exibir tÃ³picos marcados como `PUBLIC` por todos os usuÃ¡rios na plataforma.
+**CritÃ©rios de Aceite:**
 - [x] Uma aba dedicada a "Community".
-- [x] Exibe cartões de tópicos com informações resumidas e identificação do autor (foto, nome).
-- [x] Tópicos privados (`PRIVATE`) **não** devem aparecer neste feed sob nenhuma circunstância.
+- [x] Exibe cartÃµes de tÃ³picos com informaÃ§Ãµes resumidas e identificaÃ§Ã£o do autor (foto, nome).
+- [x] TÃ³picos privados (`PRIVATE`) **nÃ£o** devem aparecer neste feed sob nenhuma circunstÃ¢ncia.
 
 ### Issue #7: Sistema de Favoritos e Seguidores (A Fazer)
-**Descrição:** Permitir que desenvolvedores construam curadorias favoritando tópicos de outros e seguindo perfis.
-**Critérios de Aceite:**
-- [x] Botão de favoritar em tópicos públicos do Feed da Comunidade.
-- [x] Página de perfil público do usuário com botão "Seguir" (implementado botão seguir direto no card).
-- [x] Filtro no Feed da Comunidade para ver apenas tópicos de "Quem eu sigo".
+**DescriÃ§Ã£o:** Permitir que desenvolvedores construam curadorias favoritando tÃ³picos de outros e seguindo perfis.
+**CritÃ©rios de Aceite:**
+- [x] BotÃ£o de favoritar em tÃ³picos pÃºblicos do Feed da Comunidade.
+- [x] PÃ¡gina de perfil pÃºblico do usuÃ¡rio com botÃ£o "Seguir" (implementado botÃ£o seguir direto no card).
+- [x] Filtro no Feed da Comunidade para ver apenas tÃ³picos de "Quem eu sigo".
 
 ---
 
-## Epic 5: Motor de Recomenda��es Contextuais
+## Epic 5: Motor de Recomendações Contextuais
 
 ### Issue #8: Banco de Dados - Tabela IgnoredRecommendation
-**Descri��o:** Adicionar a entidade respons�vel por salvar as recomenda��es que o usu�rio ignorou, funcionando como uma blacklist para o LLM.
-**Crit�rios de Aceite:**
-- [ ] Criar o model IgnoredRecommendation no schema.prisma com userId, domain e 	opicTitle.
-- [ ] O modelo deve ter rela��o com o User.
-- [ ] Rodar o comando de sincroniza��o do banco de dados (ex: db push ou dev).
+**Descrição:** Adicionar a entidade responsável por salvar as recomendações que o usuário ignorou, funcionando como uma blacklist para o LLM.
+**Critérios de Aceite:**
+- [x] Criar o model `IgnoredRecommendation` no `schema.prisma` com `userId`, `domain` e `topicTitle`.
+- [x] O modelo deve ter relação com o `User`.
+- [x] Rodar o comando de sincronização do banco de dados (ex: db push ou dev).
 
-### Issue #9: Rota de IA - Gerador de Recomenda��es
-**Descri��o:** Criar o endpoint de backend que chama o Google Gemini, passando o contexto e a blacklist, para receber as sugest�es estruturadas.
-**Crit�rios de Aceite:**
+### Issue #9: Rota de IA - Gerador de Recomendações
+**Descrição:** Criar o endpoint de backend que chama o Google Gemini, passando o contexto e a blacklist, para receber as sugestões estruturadas.
+**Critérios de Aceite:**
 - [ ] Criar POST /api/ai/recommend.
-- [ ] Buscar no banco os t�picos do usu�rio para o dom�nio solicitado (para contexto do que ele j� sabe).
-- [ ] Buscar no banco a lista de IgnoredRecommendation daquele dom�nio (blacklist).
-- [ ] Instruir o LLM via Vercel AI SDK a retornar um array de 1 a 10 sugest�es (t�tulo e descri��o curta).
+- [ ] Buscar no banco os tópicos do usuário para o domínio solicitado (para contexto do que ele já sabe).
+- [ ] Buscar no banco a lista de IgnoredRecommendation daquele domínio (blacklist).
+- [ ] Instruir o LLM via Vercel AI SDK a retornar um array de 1 a 10 sugestões (título e descrição curta).
 
-### Issue #10: UI - Modal de Recomenda��es e Regra dos 3
-**Descri��o:** Criar o gatilho visual e a interface onde as recomenda��es ser�o exibidas, respeitando a hierarquia visual.
-**Crit�rios de Aceite:**
-- [ ] Adicionar um bot�o de "varinha m�gica" ao lado de cada Dom�nio no TopicBoard.
+### Issue #10: UI - Modal de Recomendações e Regra dos 3
+**Descrição:** Criar o gatilho visual e a interface onde as recomendações serão exibidas, respeitando a hierarquia visual.
+**Critérios de Aceite:**
+- [ ] Adicionar um botão de "varinha mágica" ao lado de cada Domínio no TopicBoard.
 - [ ] O clique deve abrir um Modal/Dialog com *Skeleton Loaders* enquanto a API responde.
 - [ ] Os 3 primeiros itens devem ter um card de destaque maior ("Highly Recommended").
-- [ ] Os demais itens (do 4� ao 10�) devem aparecer em uma lista compacta.
+- [ ] Os demais itens (do 4º ao 10º) devem aparecer em uma lista compacta.
 - [ ] Clicar fora do modal fecha-o sem salvar estado.
 
-### Issue #11: A��es de Convers�o - Add e Ignore
-**Descri��o:** Ligar os bot�es dos cards de recomenda��o aos respectivos endpoints de convers�o e descarte.
-**Crit�rios de Aceite:**
-- [ ] Clicar em "Add" deve salvar um novo t�pico como TO_LEARN e PRIVATE, fechando a recomenda��o e atualizando a interface.
+### Issue #11: Ações de Conversão - Add e Ignore
+**Descrição:** Ligar os botões dos cards de recomendação aos respectivos endpoints de conversão e descarte.
+**Critérios de Aceite:**
+- [ ] Clicar em "Add" deve salvar um novo tópico como TO_LEARN e PRIVATE, fechando a recomendação e atualizando a interface.
 - [ ] Clicar em "Ignore" deve chamar um novo endpoint POST /api/recommendations/ignore para salvar no banco.
-- [ ] T�picos adicionados n�o devem gerar reload da p�gina inteira.
+- [ ] Tópicos adicionados não devem gerar reload da página inteira.

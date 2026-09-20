@@ -19,6 +19,7 @@ model User {
   following     Follow[]   @relation("UserFollowing")
   followers     Follow[]   @relation("UserFollowers")
   favorites     Favorite[]
+  ignoredRecs   IgnoredRecommendation[]
 }
 
 model Account {
@@ -103,4 +104,16 @@ model Favorite {
   topic Topic @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
   @@unique([userId, topicId])
+}
+
+model IgnoredRecommendation {
+  id         String   @id @default(cuid())
+  userId     String
+  domain     String
+  topicTitle String
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, domain, topicTitle])
 }
