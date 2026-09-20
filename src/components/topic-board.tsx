@@ -77,6 +77,15 @@ export default function TopicBoard() {
     });
   };
 
+  const deleteTopic = async (id: string) => {
+    if (!confirm("Tem certeza de que deseja remover este card?")) return;
+    
+    setTopics((prev) => prev.filter((t) => t.id !== id));
+    await fetch(`/api/topics/${id}`, {
+      method: "DELETE",
+    });
+  };
+
   const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
     if (!destination) return;
@@ -322,18 +331,29 @@ export default function TopicBoard() {
                                       {...provided.dragHandleProps}
                                       className={`${snapshot.isDragging ? 'shadow-xl ring-2 ring-blue-500/20 opacity-90' : ''}`}
                                     >
-                                      <Card className={`overflow-hidden transition-all ${config.borderClass}`}>
+                                      <Card className={`overflow-hidden transition-all ${config.borderClass} group/card`}>
                                         <CardHeader className={`p-3 ${compactView ? 'pb-3' : 'pb-2'}`}>
                                           <div className="flex justify-between items-start gap-2">
                                             <CardTitle className={`leading-tight ${compactView ? 'text-sm' : 'text-base'}`}>{topic.title}</CardTitle>
-                                            <Badge 
-                                              variant={topic.visibility === "PUBLIC" ? "default" : "secondary"} 
-                                              className="text-[10px] cursor-pointer shrink-0" 
-                                              onClick={() => updateTopic(topic.id, { visibility: topic.visibility === "PRIVATE" ? "PUBLIC" : "PRIVATE" })}
-                                            >
-                                              {topic.visibility === "PUBLIC" ? <Globe className="w-3 h-3 mr-1" /> : <Lock className="w-3 h-3 mr-1" />}
-                                              {topic.visibility}
-                                            </Badge>
+                                            <div className="flex items-center gap-1 shrink-0">
+                                              <Badge 
+                                                variant={topic.visibility === "PUBLIC" ? "default" : "secondary"} 
+                                                className="text-[10px] cursor-pointer" 
+                                                onClick={() => updateTopic(topic.id, { visibility: topic.visibility === "PRIVATE" ? "PUBLIC" : "PRIVATE" })}
+                                              >
+                                                {topic.visibility === "PUBLIC" ? <Globe className="w-3 h-3 mr-1" /> : <Lock className="w-3 h-3 mr-1" />}
+                                                {topic.visibility}
+                                              </Badge>
+                                              <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-6 w-6 opacity-0 group-hover/card:opacity-100 transition-opacity text-zinc-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/50"
+                                                onClick={() => deleteTopic(topic.id)}
+                                                title="Remover card"
+                                              >
+                                                <Trash2 className="h-3.5 w-3.5" />
+                                              </Button>
+                                            </div>
                                           </div>
                                         </CardHeader>
                                         
