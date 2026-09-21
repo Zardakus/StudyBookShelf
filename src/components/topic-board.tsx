@@ -69,21 +69,37 @@ export default function TopicBoard() {
   }, []);
 
   const updateTopic = async (id: string, updates: Partial<Topic>) => {
+    const previousTopics = [...topics];
     setTopics((prev) => prev.map((t) => (t.id === id ? { ...t, ...updates } : t)));
-    await fetch(`/api/topics/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updates),
-    });
+    
+    try {
+      const res = await fetch(`/api/topics/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      });
+      if (!res.ok) throw new Error("Falha ao atualizar");
+    } catch (error) {
+      setTopics(previousTopics);
+      alert("Erro ao atualizar o card. Tente novamente.");
+    }
   };
 
   const deleteTopic = async (id: string) => {
     if (!confirm("Tem certeza de que deseja remover este card?")) return;
     
+    const previousTopics = [...topics];
     setTopics((prev) => prev.filter((t) => t.id !== id));
-    await fetch(`/api/topics/${id}`, {
-      method: "DELETE",
-    });
+    
+    try {
+      const res = await fetch(`/api/topics/${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Falha ao deletar");
+    } catch (error) {
+      setTopics(previousTopics);
+      alert("Erro ao remover o card. Tente novamente.");
+    }
   };
 
   const onDragEnd = (result: DropResult) => {
@@ -339,7 +355,10 @@ export default function TopicBoard() {
                                               <Badge 
                                                 variant={topic.visibility === "PUBLIC" ? "default" : "secondary"} 
                                                 className="text-[10px] cursor-pointer" 
-                                                onClick={() => updateTopic(topic.id, { visibility: topic.visibility === "PRIVATE" ? "PUBLIC" : "PRIVATE" })}
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  updateTopic(topic.id, { visibility: topic.visibility === "PRIVATE" ? "PUBLIC" : "PRIVATE" });
+                                                }}
                                               >
                                                 {topic.visibility === "PUBLIC" ? <Globe className="w-3 h-3 mr-1" /> : <Lock className="w-3 h-3 mr-1" />}
                                                 {topic.visibility}
@@ -348,7 +367,10 @@ export default function TopicBoard() {
                                                 variant="ghost"
                                                 size="icon"
                                                 className="h-6 w-6 opacity-0 group-hover/card:opacity-100 transition-opacity text-zinc-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/50"
-                                                onClick={() => deleteTopic(topic.id)}
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  deleteTopic(topic.id);
+                                                }}
                                                 title="Remover card"
                                               >
                                                 <Trash2 className="h-3.5 w-3.5" />
