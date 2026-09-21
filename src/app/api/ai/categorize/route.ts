@@ -32,6 +32,10 @@ export async function POST(req: Request) {
     return NextResponse.json(object);
   } catch (error) {
     console.error("AI Error:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    if (errorMessage.includes("exceeded your current quota") || errorMessage.includes("429")) {
+      return NextResponse.json({ error: "AI rate limit exceeded. Please try again tomorrow." }, { status: 429 });
+    }
     return NextResponse.json({ error: "Failed to categorize topic" }, { status: 500 });
   }
 }

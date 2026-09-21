@@ -68,10 +68,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ recommendations: object.recommendations });
   } catch (error) {
     console.error("AI Recommendation error:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    if (errorMessage.includes("exceeded your current quota") || errorMessage.includes("429")) {
+      return NextResponse.json({ error: "AI rate limit exceeded. Please try again tomorrow." }, { status: 429 });
+    }
     return NextResponse.json(
       { 
         error: "Failed to generate recommendations", 
-        details: error instanceof Error ? error.message : String(error)
+        details: errorMessage
       },
       { status: 500 }
     );

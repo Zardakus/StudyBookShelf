@@ -46,6 +46,7 @@ export default function TopicBoard() {
   // Recommendations State
   const [recDomain, setRecDomain] = useState<string | null>(null);
   const [recsLoading, setRecsLoading] = useState(false);
+  const [recsError, setRecsError] = useState<string | null>(null);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [selectedRec, setSelectedRec] = useState<Recommendation | null>(null);
 
@@ -148,6 +149,7 @@ export default function TopicBoard() {
   const openRecommendations = async (domain: string) => {
     setRecDomain(domain);
     setRecsLoading(true);
+    setRecsError(null);
     setRecommendations([]);
     setSelectedRec(null);
 
@@ -164,7 +166,12 @@ export default function TopicBoard() {
         if (recs.length > 0) {
           setSelectedRec(recs[0]);
         }
+      } else {
+        const data = await res.json().catch(() => null);
+        setRecsError(data?.error || "Failed to generate recommendations");
       }
+    } catch (err: any) {
+      setRecsError(err.message || "Network error");
     } finally {
       setRecsLoading(false);
     }
@@ -427,6 +434,11 @@ export default function TopicBoard() {
             <div className="w-full h-full flex flex-col items-center justify-center p-8">
               <Loader2 className="h-8 w-8 animate-spin text-amber-500 mb-4" />
               <DialogTitle className="text-zinc-500 font-medium">Finding recommendations...</DialogTitle>
+            </div>
+          ) : recsError ? (
+            <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center text-red-500">
+              <DialogTitle className="text-xl mb-2 text-zinc-900 dark:text-zinc-100">Error</DialogTitle>
+              <p>{recsError}</p>
             </div>
           ) : recommendations.length === 0 ? (
             <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center">

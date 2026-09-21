@@ -26,7 +26,10 @@ export default function AddTopicInput() {
         body: JSON.stringify({ prompt }),
       });
 
-      if (!aiRes.ok) throw new Error("Failed to categorize topic");
+      if (!aiRes.ok) {
+        const errData = await aiRes.json().catch(() => null);
+        throw new Error(errData?.error || "Failed to categorize topic");
+      }
       const categorized = await aiRes.json();
 
       // 2. Save Topic
